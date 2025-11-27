@@ -26,7 +26,7 @@ Each ether channel group you create can have up to 16 physical but 8 can by acti
 |passive | active | channel created |
 |passive | passive | no channel created |
 
-exampl: if i have configure a 16 port channel on switch 2 to passive and 8 ports channel on switch 1 to active 8 ports on channel 2 will forward data. the other 8 ports will be in standby mode if any of the forwarding goed down.
+**example :** if i have configure a 16 port channel on switch 2 to passive and 8 ports channel on switch 1 to active 8 ports on channel 2 will forward data. the other 8 ports will be in standby mode if any of the forwarding goed down.
 
 ## Requirements  
 To be able to create a channel both sides and all interfaces/ports must have the following<br><br> **1.** all must be on the same duplex. all half-duplex or all full-duplex <br> **2** all must have the same port speed. ex: all 100 mbps or all 1 gps <br> **3** Same switchport mode and vlan
