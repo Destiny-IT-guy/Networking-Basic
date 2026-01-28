@@ -62,7 +62,7 @@ The <b>network</b> option shows only the net link state with additional informat
 ### Forwarding database (Routing table)
 
 After a router finishes it area LSDB and run the spf algorithm it create the ospf Routing table. In this table the router chooses the best path to reach every network included in OSPF. the best path is the one with the lowest cost. The ospf cost for an interface is calculated by using the formula:
-`Cost = reference bandwidth/interface bandwidth.` . Any cost under 1 like 01 will be rounded up to 1. If i need to go thru 2 interfaces one with a cost of 1 and other with cost of 11 my total cost will be 11. By default the reference bandwidth will be 100 Mbps. to change it use the following command
+`Cost = reference bandwidth/interface bandwidth.` . Any cost under 1 like 0.1 will be rounded up to 1. If i need to go thru 2 interfaces one with a cost of 1 and other with cost of 10 my total cost will be 11. By default the reference bandwidth will be 100 Mbps. to change it use the following command
 
 ```
 router ospf <process id>
@@ -85,17 +85,14 @@ OSPF devices communicate with each other using packets. There are a total of 5 t
 | Packets type | Purpose |
 |--------------|---------|
 | hello packet | Routers send these every 10 seconds to find neighbor and keep connection up. These are also used for The DR and BDR election process |
-| Database description (DBD) | Contains abreviated list od LSDB. during adjcency router sends dbd. They are used to check if their LSA are out of date |
-| 
+| Database description (DBD) | Contains abbreviated list od LSDB. during adjacency router sends dbd. They are used to check if their LSA are out of date |
+| Link-state request packet (LSR) | This packet is used to request more information or up to date information from other routers. Usually after finding out his database is out of date with DBD packets. |
+| Link state update (LSU) | To respond to a LSR other devices will use LSU packet to carry up to date LSAs to the other devices. This happens usually if a link goes up or down or added some new network to the ospf area |
+| Link state acknowledgement (lsack) | After receiving LSA from LSU the receiver send a LSack to ensure the sender that he receive the data. |
 
+## LSA 
 
-
-
-
-
-
-
-
+LSA or link state advertisement is a packet of datat that details a ospf topology.
 
 # The end
 
