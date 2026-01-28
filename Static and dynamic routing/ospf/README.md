@@ -10,7 +10,7 @@ How ospf works.
 4- Execute the SPF. Using the LSDB, the router calculates the shortest paths to all networks in the area. </br>
 5- Choose the best routes. The router adds the lowest-cost paths to its routing table, which it will use to forward traffic.
 
-## database
+## databases
 
 Before exchanging information, routers has to establish neighbors with other routers in network. They exchange information such as router IDs, area id, packets and more.
 To function efficiently, ospf use various databases (3):
@@ -33,7 +33,6 @@ sh0ow ip ospf neighbor 1.1.1.1
 
 This table (LSDB) contains the complete ospf network topology for a specific area.This table is built by using Link-state advertisement<b> LSA</b> from other neighbor in the same area. If a router has multiple area it will have multiple LSDB. This table data is used to run the spf algorithm. All router within the identical area have identical LSDB after synchronization.
 
-
 ```
 show ip ospf database
 show ip ospf database network
@@ -42,7 +41,7 @@ show ip ospf database router <router.id>
 
 When you run the basic commands you will see 2 different link state.
 
-<u>The router link state</u>: every router in the same area will create a type 1 LSA. This LSA describes the router interfaces, link cost and neighbor relationship in the area. 
+<u>The router link state</u>: every router in the same area will create a type 1 LSA. This LSA describes the router interfaces, link cost and neighbor relationship in the area.
 
 |row|name|explanation|
 |---|----|-----------|
@@ -57,7 +56,7 @@ When you run the basic commands you will see 2 different link state.
 
 The link ID section defines IP address of interfaces of the DR router. ADV  router show the router ID of the DR.
 
-The <b>network</b> option shows only the net link state with additional information. The <b>router</b> option  will show you the router link state with additional detail. 
+The <b>network</b> option shows only the net link state with additional information. The <b>router</b> option  will show you the router link state with additional detail.
 
 ### Forwarding database (Routing table)
 
@@ -88,11 +87,19 @@ OSPF devices communicate with each other using packets. There are a total of 5 t
 | Database description (DBD) | Contains abbreviated list od LSDB. during adjacency router sends dbd. They are used to check if their LSA are out of date |
 | Link-state request packet (LSR) | This packet is used to request more information or up to date information from other routers. Usually after finding out his database is out of date with DBD packets. |
 | Link state update (LSU) | To respond to a LSR other devices will use LSU packet to carry up to date LSAs to the other devices. This happens usually if a link goes up or down or added some new network to the ospf area |
-| Link state acknowledgement (lsack) | After receiving LSA from LSU the receiver send a LSack to ensure the sender that he receive the data. |
+| Link state acknowledgement (LSack) | After receiving LSA from LSU the receiver send a LSack to ensure the sender that he receive the data. |
 
-## LSA 
+## LSA
 
-LSA or link state advertisement is a packet of datat that details a ospf topology.
+LSA or link state advertisement is a packet of data that details part of a ospf topology. Different types of LSA types are used by routers to create the topology. They are stored in the LSDB. A Router must get and learn every LSAs of that area.
+
+LSA flooding is an important part of the ospf process. IT is a way to distribute LSAs to all router within the same area. When a toplogy change happens the originating router floods its updated LSA to its ospf neighbors. Other routers can also request new LSA if the notice that their own are missing or out of date.
+
+In ospfv2 (IPV4) There are a total of 11 different lsa type. 8-11 are used for special purposes. The following table will explain lsa 1-7
+
+| Type | Name | Purpose |
+|------|------|---------|
+| 1 | Router LSA | 
 
 # The end
 
@@ -104,4 +111,4 @@ ospf area and types
 
 how to configure ospf
 
-passive interfaces 
+passive interfaces
