@@ -2,7 +2,7 @@
 
 Open shortest past first (OSPF) is a commonly used dynamic routing protocol. It is a link state routing protocol, which means every router shares information about their links to other router. OSPF use the <b>Dijkstra algorithm </b> to calculate the shortest path to the destination. Every router create the same map of the network. Every router run the SPF algorithm to determine the best path through a network.
 
-How ospf works.
+<b>How ospf works.</b>
 
 1- Establish neighbor relationships. Routers discover other OSPF routers on the same network and form adjacencies. </br>
 2- Exchange LSAs. Routers share information about their interfaces, links, and networks with their neighbors </br>
@@ -99,16 +99,94 @@ In ospfv2 (IPV4) There are a total of 11 different lsa type. 8-11 are used for s
 
 | Type | Name | Purpose |
 |------|------|---------|
-| 1 | Router LSA | 
+| 1 | Router LSA | ... |
+| 2 | Network LSA | ... |
+| 3 | ABR Summary | ... |
+| 4 | ASBR Summary | ... |
+| 5 | ASBR External LSA | ... |
+| 6 | Multicast OSPF LSA | ... |
+| 7 | NSSA External LSA | ... |
+| 8 | |
+
+## DR BDR election
+
+To reduce traffic and LSA flooding ospf use a <b>DR</b>(Designated router) and a <b>BDR</b>(backup designated router). All none DR or BDR ospf device are considered as <b>Drother</b>. All Drother exchange information like LSA with the DR and then the DR floods them to all ospf device in the same area.<br><br>
+To send information to DR you would use the IP 224.0.0.5 <br> When the DR floods LSA to all devices it use the IP 224.0.0.6
+
+How does ospf select the DR and BDR? There are 2 possible ways to accomplish the goal
+
+<b>1-</b> The ospf devices with the highest priority will be named DR and BDR<br>
+<b>2-</b> If ospf device has the same priority the one with the highest router-id will be named DR and BDR
+
+By default the ospf priority will be configured to 1. The lowest possible value will be 0 (never be elected DR) and highest possible value is 255. You configure priority on interface. Her is an example:
+
+``` 
+interface g0/1
+ip ospf priority 100
+```
+
+If no router-id has been configured the IP address loopback interface with highest ip address will be selected as router-id. If no loopback has been created the highest ip address on any interface will be selected as router-id
+
+### adjacency and state
+
+Ospf device need to form adjacencies with all other ospf device within a network to exchange information and to finish the DR election process.
+
+adjacency types
+
+## configuration
+
+There are generally 2 ways to configure ospf. First you can configure it from global configuration mode or you can configure them directly on each interface. I will show you both
+
+lvl 3 switch 1
+```
+router ospf 1
+router-id 1.1.1.1
+network 10.10.10.0 0.0.0.255 area 0
+network 10.10.11.0 0.0.0.255 area 0
+network 10.10.20.0 0.0.1.255 area 0
+```
+
+Router
+
+```
+router ospf 1
+router-id 1.1.1.2 
+network 10.10.10.0 0.0.0.255 area 0
+network 10.10.11.0 0.0.0.255 area 0
+network 10.10.20.0 0.0.1.255 area 0
+```
+
+In this i connected a level 3 switch in trunk mode to a port on the router which has 3 sub interface.
+
+This is how you configure ospf on interfaces directly
+
+```
+router ospf 1
+router-id 1.1.1.1
+int g0/1.10
+ip add ...
+ip ospf 1 area 0 
+int g0/1.11
+ip add ...
+ip ospf 1 area 0
+```
+
+As you can see I had to configure ospf on each interface which might take a little bit more time.
+
+### Passive interface
+
+Ospf passive interface allow us to add a network to our ospf database but disabling hello packets from being sent from that interface. Like i previously said when you add a network to ospf all interface that has a ip in the network will start advertising. This might be a waste of resources and a security risk if the other part of that interface isn't connected to a ospf device. Passive interface are useful if a layer 2 switch is connected to a ospf device or you can also try with loopback interfaces.
+
+```
+router ospf 1
+router-id 1.1.1.1
+network 10.10.10.0 0.0.0.255 area 0
+network 10.10.11.0 0.0.0.255 area 0
+passive-interface g0/1.11
+```
+
+as you see i have to specify which interface to not participate in sending hello packets.
 
 # The end
 
-types of packets
-
-reason for DR and br and other categories
-
-ospf area and types
-
-how to configure ospf
-
-passive interfaces
+I will add a area section, add more on DR process and finish the adjacency section on a later date. I might add how to configure ospf on pfsense (GUI and shell) in the proxmox repo.
