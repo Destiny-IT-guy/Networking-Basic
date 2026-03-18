@@ -44,7 +44,7 @@ Let say you want to connect a Nating router to a level 3 switch with multiple vl
 
 router
 
-```ios
+```cisco
 enable
 ip route ....
 ```
