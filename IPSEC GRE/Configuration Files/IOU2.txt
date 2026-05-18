@@ -1,0 +1,41 @@
+enable
+conf t
+vlan 20
+exit
+vlan 40
+exit
+vlan 2
+exit
+vlan 200
+exit
+vlan 999
+exit
+int vlan 2
+ip add 10.10.0.2 255.255.254.0
+no shut
+int vlan 20
+ip add 10.10.20.2 255.255.255.0
+no shut
+int vlan 40
+ip add 10.10.40.2 255.255.255.0
+no shut
+int vlan 200
+ip add 10.10.200.2 255.255.255.0
+no shut
+
+int e0/0 
+switchport mode access
+switchport access vlan 20
+no shut
+int e0/2 
+switchport trunk encapsulation dot1q
+switchport mode trunk 
+switchport trunk allowed vlan 2,20,40,200
+switchport trunk native vlan 999
+no shut
+
+ip default-gateway 10.10.200.253 
+
+end 
+
+wr

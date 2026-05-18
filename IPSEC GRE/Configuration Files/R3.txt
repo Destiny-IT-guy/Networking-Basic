@@ -1,0 +1,15 @@
+
+enable 
+conf t
+int g0/0
+ip add 17.17.17.1 255.255.255.252
+no shut
+int g1/0
+ip add 18.18.18.1 255.255.255.252
+no shut
+int loopback0
+ip add 8.8.8.8 255.255.255.255
+no shut
+end
+wr
+

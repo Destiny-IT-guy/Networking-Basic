@@ -1,0 +1,44 @@
+enable
+conf t
+int e0/0
+no shut
+int e0/0.2
+encapsulation dot1q 2
+ip add  10.10.1.253 255.255.254.0
+no shut
+int e0/0.20
+encapsulation dot1q 20
+ip add  10.10.20.253 255.255.255.0
+no shut
+int e0/0.40
+encapsulation dot1q 40
+ip add  10.10.40.253 255.255.255.0
+no shut
+int e0/0.200
+encapsulation dot1q 200
+ip add  10.10.200.253 255.255.255.0
+no shut
+int e0/1
+duplex full
+ip add 10.10.250.253 255.255.255.0
+no shut
+
+router ospf 1
+router-id 1.1.1.4
+network 10.10.0.0 0.0.1.255 area 0
+network 10.10.20.0 0.0.0.255 area 0
+network 10.10.40.0 0.0.0.255 area 0
+network 10.10.200.0 0.0.0.255 area 0
+network 10.10.250.0 0.0.0.255 area 0
+passive-interface e0/0
+passive-interface e0/0.2
+passive-interface e0/0.20
+passive-interface e0/0.40
+passive-interface e0/0.200
+
+! ==fix route 
+
+ip route 0.0.0.0 0.0.0.0 e0/1
+
+end
+wr
